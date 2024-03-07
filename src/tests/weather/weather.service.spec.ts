@@ -1,8 +1,8 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { ConfigService } from '@nestjs/config';
 import axios from 'axios';
-import { WeatherService } from '../../weather/weather.service';
-import { LocationService } from '../../location/location.service';
+import { WeatherService } from '../../Weather/weather.service';
+import { LocationService } from '../../Location/location.service';
 
 
 jest.mock('axios');

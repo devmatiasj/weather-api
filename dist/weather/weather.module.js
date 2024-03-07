@@ -10,8 +10,9 @@ exports.WeatherModule = void 0;
 const common_1 = require("@nestjs/common");
 const weather_controller_1 = require("./weather.controller");
 const weather_service_1 = require("./weather.service");
-const location_module_1 = require("../location/location.module");
-const location_service_1 = require("../location/location.service");
+const location_module_1 = require("../Location/location.module");
+const location_service_1 = require("../Location/location.service");
+const http_service_1 = require("../shared/http/http.service");
 let WeatherModule = class WeatherModule {
 };
 exports.WeatherModule = WeatherModule;
@@ -19,7 +20,7 @@ exports.WeatherModule = WeatherModule = __decorate([
     (0, common_1.Module)({
         imports: [location_module_1.LocationModule],
         controllers: [weather_controller_1.WeatherController],
-        providers: [weather_service_1.WeatherService, location_service_1.LocationService],
+        providers: [weather_service_1.WeatherService, location_service_1.LocationService, http_service_1.HttpService],
     })
 ], WeatherModule);
 //# sourceMappingURL=weather.module.js.map

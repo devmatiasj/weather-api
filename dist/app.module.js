@@ -9,8 +9,9 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.AppModule = void 0;
 const common_1 = require("@nestjs/common");
 const config_1 = require("@nestjs/config");
-const location_module_1 = require("./location/location.module");
-const weather_module_1 = require("./weather/weather.module");
+const location_module_1 = require("./Location/location.module");
+const weather_module_1 = require("./Weather/weather.module");
+const http_service_1 = require("./shared/http/http.service");
 let AppModule = class AppModule {
 };
 exports.AppModule = AppModule;
@@ -24,7 +25,7 @@ exports.AppModule = AppModule = __decorate([
             location_module_1.LocationModule,
         ],
         controllers: [],
-        providers: [],
+        providers: [http_service_1.HttpService],
     })
 ], AppModule);
 //# sourceMappingURL=app.module.js.map

@@ -10,13 +10,14 @@ exports.LocationModule = void 0;
 const common_1 = require("@nestjs/common");
 const location_controller_1 = require("./location.controller");
 const location_service_1 = require("./location.service");
+const http_service_1 = require("../shared/http/http.service");
 let LocationModule = class LocationModule {
 };
 exports.LocationModule = LocationModule;
 exports.LocationModule = LocationModule = __decorate([
     (0, common_1.Module)({
         controllers: [location_controller_1.LocationController],
-        providers: [location_service_1.LocationService],
+        providers: [location_service_1.LocationService, http_service_1.HttpService],
     })
 ], LocationModule);
 //# sourceMappingURL=location.module.js.map

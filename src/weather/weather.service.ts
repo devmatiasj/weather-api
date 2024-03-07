@@ -1,11 +1,17 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import axios from 'axios';
-import { LocationService } from '../location/location.service';
+import { LocationService } from '../Location/location.service';
+import { HttpService } from '../shared/http/http.service';
 
 @Injectable()
 export class WeatherService {
-  constructor(private configService: ConfigService, private locationService: LocationService) {}
+  private readonly baseUrl: string;
+  private readonly apiKey: string;
+
+  constructor(private configService: ConfigService, private locationService: LocationService, private httpService: HttpService) {
+    this.apiKey = this.configService.get('OPEN_WEATHER_API_KEY');
+    this.baseUrl = this.configService.get('OPEN_WEATHER_BASE_URL');
+  }
 
   async getCurrentWeather(city?: string): Promise<any> {
     try {
@@ -14,8 +20,7 @@ export class WeatherService {
         city = (await this.locationService.getLocation(ip)).city;
       }
       const location = city;
-      const apiKey = this.configService.get('OPEN_WEATHER_API_KEY');
-      const response = await axios.get(`http://api.openweathermap.org/data/2.5/weather?q=${location}&appid=${apiKey}`);
+      const response = await this.httpService.get(`${this.baseUrl}/weather?q=${location}&appid=${this.apiKey}`);
       return response.data;
     } catch (error) {
       throw new HttpException('Failed to get current weather', HttpStatus.INTERNAL_SERVER_ERROR);
@@ -29,8 +34,7 @@ export class WeatherService {
         city = (await this.locationService.getLocation(ip)).city;
       }
       const location = city;
-      const apiKey = this.configService.get('OPEN_WEATHER_API_KEY');
-      const response = await axios.get(`http://api.openweathermap.org/data/2.5/forecast?q=${location}&appid=${apiKey}`);
+      const response = await this.httpService.get(`${this.baseUrl}/forecast?q=${location}&appid=${this.apiKey}`);
       return response.data;
     } catch (error) {
       throw new HttpException('Failed to get weather forecast', HttpStatus.INTERNAL_SERVER_ERROR);

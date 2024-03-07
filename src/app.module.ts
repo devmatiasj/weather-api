@@ -1,8 +1,8 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
-import { LocationModule } from './location/location.module';
-import { WeatherModule } from './weather/weather.module';
-
+import { LocationModule } from './Location/location.module';
+import { WeatherModule } from './Weather/weather.module';
+import { HttpService } from './shared/http/http.service';
 
 @Module({
   imports: [
@@ -13,6 +13,6 @@ import { WeatherModule } from './weather/weather.module';
     LocationModule,
   ],
   controllers: [],
-  providers: [],
+  providers: [HttpService],
 })
 export class AppModule {}

@@ -12,12 +12,15 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.WeatherService = void 0;
 const common_1 = require("@nestjs/common");
 const config_1 = require("@nestjs/config");
-const axios_1 = require("axios");
-const location_service_1 = require("../location/location.service");
+const location_service_1 = require("../Location/location.service");
+const http_service_1 = require("../shared/http/http.service");
 let WeatherService = class WeatherService {
-    constructor(configService, locationService) {
+    constructor(configService, locationService, httpService) {
         this.configService = configService;
         this.locationService = locationService;
+        this.httpService = httpService;
+        this.apiKey = this.configService.get('OPEN_WEATHER_API_KEY');
+        this.baseUrl = this.configService.get('OPEN_WEATHER_BASE_URL');
     }
     async getCurrentWeather(city) {
         try {
@@ -26,8 +29,7 @@ let WeatherService = class WeatherService {
                 city = (await this.locationService.getLocation(ip)).city;
             }
             const location = city;
-            const apiKey = this.configService.get('OPEN_WEATHER_API_KEY');
-            const response = await axios_1.default.get(`http://api.openweathermap.org/data/2.5/weather?q=${location}&appid=${apiKey}`);
+            const response = await this.httpService.get(`${this.baseUrl}/weather?q=${location}&appid=${this.apiKey}`);
             return response.data;
         }
         catch (error) {
@@ -41,8 +43,7 @@ let WeatherService = class WeatherService {
                 city = (await this.locationService.getLocation(ip)).city;
             }
             const location = city;
-            const apiKey = this.configService.get('OPEN_WEATHER_API_KEY');
-            const response = await axios_1.default.get(`http://api.openweathermap.org/data/2.5/forecast?q=${location}&appid=${apiKey}`);
+            const response = await this.httpService.get(`${this.baseUrl}/forecast?q=${location}&appid=${this.apiKey}`);
             return response.data;
         }
         catch (error) {
@@ -53,6 +54,6 @@ let WeatherService = class WeatherService {
 exports.WeatherService = WeatherService;
 exports.WeatherService = WeatherService = __decorate([
     (0, common_1.Injectable)(),
-    __metadata("design:paramtypes", [config_1.ConfigService, location_service_1.LocationService])
+    __metadata("design:paramtypes", [config_1.ConfigService, location_service_1.LocationService, http_service_1.HttpService])
 ], WeatherService);
 //# sourceMappingURL=weather.service.js.map
