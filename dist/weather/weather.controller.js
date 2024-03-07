@@ -16,34 +16,40 @@ exports.WeatherController = void 0;
 const common_1 = require("@nestjs/common");
 const weather_service_1 = require("./weather.service");
 const swagger_1 = require("@nestjs/swagger");
+class WeatherParams {
+}
+__decorate([
+    (0, swagger_1.ApiProperty)({ required: false }),
+    __metadata("design:type", String)
+], WeatherParams.prototype, "city", void 0);
 let WeatherController = class WeatherController {
     constructor(weatherService) {
         this.weatherService = weatherService;
     }
-    async getCurrentWeather(city) {
-        return await this.weatherService.getCurrentWeather(city);
+    async getCurrentWeather(params) {
+        return await this.weatherService.getCurrentWeather(params.city);
     }
-    async getWeatherForecast(city) {
-        return await this.weatherService.getWeatherForecast(city);
+    async getWeatherForecast(params) {
+        return await this.weatherService.getWeatherForecast(params.city);
     }
 };
 exports.WeatherController = WeatherController;
 __decorate([
     (0, swagger_1.ApiOperation)({ summary: 'Get weather by city or current location by default' }),
     (0, swagger_1.ApiResponse)({ status: 200, description: 'The weather information of the city' }),
-    (0, common_1.Get)('current/:city?'),
-    __param(0, (0, common_1.Param)('city')),
+    (0, common_1.Get)('current'),
+    __param(0, (0, common_1.Query)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [String]),
+    __metadata("design:paramtypes", [WeatherParams]),
     __metadata("design:returntype", Promise)
 ], WeatherController.prototype, "getCurrentWeather", null);
 __decorate([
     (0, swagger_1.ApiOperation)({ summary: 'Get weather for next 5 days by city or current location by default' }),
     (0, swagger_1.ApiResponse)({ status: 200, description: 'The weather information for the next 5 days of the city' }),
-    (0, common_1.Get)('forecast/:city?'),
-    __param(0, (0, common_1.Param)('city')),
+    (0, common_1.Get)('forecast'),
+    __param(0, (0, common_1.Query)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [String]),
+    __metadata("design:paramtypes", [WeatherParams]),
     __metadata("design:returntype", Promise)
 ], WeatherController.prototype, "getWeatherForecast", null);
 exports.WeatherController = WeatherController = __decorate([
