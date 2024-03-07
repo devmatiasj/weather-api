@@ -1,5 +1,5 @@
 import { ConfigService } from '@nestjs/config';
-import { LocationService } from 'src/location/location.service';
+import { LocationService } from '../location/location.service';
 export declare class WeatherService {
     private configService;
     private locationService;
