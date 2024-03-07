@@ -20,6 +20,8 @@ export class WeatherService {
         city = (await this.locationService.getLocation(ip)).city;
       }
       const location = city;
+      console.log('baseUrl:', this.baseUrl); // Verifica el valor de baseUrl
+      console.log('apiKey:', this.apiKey);
       const response = await this.httpService.get(`${this.baseUrl}/weather?q=${location}&appid=${this.apiKey}`);
       return response.data;
     } catch (error) {
