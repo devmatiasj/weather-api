@@ -1,8 +1,11 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { LocationService } from '../../Location/location.service';
+import { LocationService } from '../../api/Location/location.service';
 import { HttpService } from '../../shared/http/http.service';
 import { ConfigService } from '@nestjs/config';
 import { of } from 'rxjs';
+import { mockLocation, mockIP } from '../mocks/location.mocks';
+import { LocationMapper } from '../../mappers/location.mapper';
+
 
 describe('LocationService', () => {
   let service: LocationService;
@@ -13,6 +16,7 @@ describe('LocationService', () => {
     const module: TestingModule = await Test.createTestingModule({
       providers: [
         LocationService,
+        LocationMapper,
         {
           provide: HttpService,
           useValue: {
@@ -45,32 +49,28 @@ describe('LocationService', () => {
 
   describe('getLocation', () => {
     it('should return location data', async () => {
-      const mockIp = '127.0.0.1';
-      const mockLocationData = { city: 'MockCity', latitude: 123, longitude: 456 };
-      jest.spyOn(httpService, 'get').mockReturnValueOnce(of({ data: mockLocationData }).toPromise());
+      jest.spyOn(httpService, 'get').mockReturnValueOnce(of({ data: mockLocation }).toPromise());
 
-      const result = await service.getLocation(mockIp);
+      const result = await service.getLocation(mockIP);
 
-      expect(result).toEqual(mockLocationData);
+      expect(result).toEqual(mockLocation);
     });
 
     it('should throw an error if fetching location fails', async () => {
-      const mockIp = '127.0.0.1';
       jest.spyOn(httpService, 'get').mockReturnValueOnce(Promise.reject(new Error()));
 
-      await expect(service.getLocation(mockIp)).rejects.toThrowError('Failed to fetch location');
+      await expect(service.getLocation(mockIP)).rejects.toThrowError('Failed to fetch location');
     });
   });
 
   describe('getIp', () => {
     it('should return IP address', async () => {
-      const mockIp = '127.0.0.1';
-      const mockIpData = { ip: mockIp };
+      const mockIpData = { ip: mockIP };
       jest.spyOn(httpService, 'get').mockReturnValueOnce(of({ data: mockIpData }).toPromise());
 
       const result = await service.getIp();
 
-      expect(result).toEqual(mockIp);
+      expect(result).toEqual(mockIP);
     });
 
     it('should throw an error if fetching IP fails', async () => {

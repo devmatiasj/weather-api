@@ -1,7 +1,7 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
-import { LocationModule } from './Location/location.module';
-import { WeatherModule } from './Weather/weather.module';
+import { LocationModule } from './api/Location/location.module';
+import { WeatherModule } from './api/Weather/weather.module';
 import { HttpService } from './shared/http/http.service';
 
 @Module({

@@ -6,26 +6,19 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.AppModule = void 0;
+exports.LocationModule = void 0;
 const common_1 = require("@nestjs/common");
-const config_1 = require("@nestjs/config");
-const location_module_1 = require("./api/Location/location.module");
-const weather_module_1 = require("./api/Weather/weather.module");
-const http_service_1 = require("./shared/http/http.service");
-let AppModule = class AppModule {
+const location_controller_1 = require("./location.controller");
+const location_service_1 = require("./location.service");
+const http_service_1 = require("../../shared/http/http.service");
+const location_mapper_1 = require("../../mappers/location.mapper");
+let LocationModule = class LocationModule {
 };
-exports.AppModule = AppModule;
-exports.AppModule = AppModule = __decorate([
+exports.LocationModule = LocationModule;
+exports.LocationModule = LocationModule = __decorate([
     (0, common_1.Module)({
-        imports: [
-            config_1.ConfigModule.forRoot({
-                isGlobal: true,
-            }),
-            weather_module_1.WeatherModule,
-            location_module_1.LocationModule,
-        ],
-        controllers: [],
-        providers: [http_service_1.HttpService],
+        controllers: [location_controller_1.LocationController],
+        providers: [location_service_1.LocationService, http_service_1.HttpService, location_mapper_1.LocationMapper],
     })
-], AppModule);
-//# sourceMappingURL=app.module.js.map
+], LocationModule);
+//# sourceMappingURL=location.module.js.map

@@ -1,9 +1,13 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { HttpException, HttpStatus } from '@nestjs/common';
+import { HttpException } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import { WeatherService } from '../../Weather/weather.service';
-import { LocationService } from '../../Location/location.service';
+import { WeatherService } from '../../api/Weather/weather.service';
+import { LocationService } from '../../api/Location/location.service';
 import { HttpService } from '../../shared/http/http.service';
+import { mockCurrentWeather, mockForecastWeather } from '../mocks/weather.mocks';
+import { mockLocation } from '../mocks/location.mocks';
+import { LocationMapper } from '../../mappers/location.mapper';
+import { WeatherMapper } from '../../mappers/weather.mapper';
 
 describe('WeatherService', () => {
   let weatherService: WeatherService;
@@ -17,6 +21,10 @@ describe('WeatherService', () => {
         return 'fake-api-key';
       } else if (key === 'OPEN_WEATHER_BASE_URL') {
         return 'http://example.com/api';
+      } else if (key === 'IP_API_BASE_URL') {
+        return 'http://exampleipapi.com/api';
+      } else if (key === 'IPIFY_BASE_URL') {
+        return 'http://exampleipify.com/api';
       }
     }),
   };
@@ -28,6 +36,8 @@ describe('WeatherService', () => {
         WeatherService,
         LocationService,
         HttpService,
+        LocationMapper,
+        WeatherMapper,
         { provide: ConfigService, useValue: configServiceMock }],
     }).compile();
 
@@ -48,10 +58,8 @@ describe('WeatherService', () => {
         return 'http://exampleipify.com/api';
       }
     });
-
-    // Mock LocationService methods
     jest.spyOn(locationService, 'getIp').mockResolvedValue('fake-ip');
-    jest.spyOn(locationService, 'getLocation').mockResolvedValue({ city: 'Cordoba' });
+    jest.spyOn(locationService, 'getLocation').mockResolvedValue(mockLocation);
   });
 
   afterEach(() => {
@@ -63,22 +71,20 @@ describe('WeatherService', () => {
   });
 
   it('getCurrentWeather should return current weather data', async () => {
-    const mockWeatherData = { temperature: 25, humidity: 60 };
-    jest.spyOn(httpService, 'get').mockResolvedValue({ data: mockWeatherData });
+    jest.spyOn(httpService, 'get').mockResolvedValue({ data: mockCurrentWeather });
   
     const weather = await weatherService.getCurrentWeather('Cordoba');
   
-    expect(weather).toEqual(mockWeatherData);
+    expect(weather).toEqual(mockCurrentWeather);
     expect(httpService.get).toHaveBeenCalledWith('http://example.com/api/weather?q=Cordoba&appid=fake-api-key');
   });
 
   it('getWeatherForecast should return weather forecast data', async () => {
-    const mockForecastData = [{ date: '2024-03-07', temperature: 22 }, { date: '2024-03-08', temperature: 24 }];
-    jest.spyOn(httpService, 'get').mockResolvedValue({ data: mockForecastData });
+    jest.spyOn(httpService, 'get').mockResolvedValue({ data: mockForecastWeather });
 
     const forecast = await weatherService.getWeatherForecast();
 
-    expect(forecast).toEqual(mockForecastData);
+    expect(forecast).toEqual(mockForecastWeather);
     expect(httpService.get).toHaveBeenCalledWith('http://example.com/api/forecast?q=Cordoba&appid=fake-api-key');
   });
 

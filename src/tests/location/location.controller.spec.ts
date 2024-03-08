@@ -1,10 +1,13 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { INestApplication } from '@nestjs/common';
 import * as request from 'supertest';
-import { LocationController } from '../../Location/location.controller';
-import { LocationService } from '../../Location/location.service';
+import { LocationController } from '../../api/Location/location.controller';
+import { LocationService } from '../../api/Location/location.service';
 import { HttpService } from '../../shared/http/http.service';
 import { ConfigService } from '@nestjs/config';
+import { mockLocation, mockIP } from '../mocks/location.mocks';
+import { LocationMapper } from '../../mappers/location.mapper';
+
 
 describe('LocationController (e2e)', () => {
   let app: INestApplication;
@@ -14,7 +17,7 @@ describe('LocationController (e2e)', () => {
   beforeAll(async () => {
     const moduleFixture: TestingModule = await Test.createTestingModule({
       controllers: [LocationController],
-      providers: [LocationService, ConfigService, HttpService],
+      providers: [LocationService, ConfigService, HttpService, LocationMapper],
     }).compile();
 
     app = moduleFixture.createNestApplication();
@@ -23,18 +26,13 @@ describe('LocationController (e2e)', () => {
   });
 
   it('/GET v1/location (getLocation)', async () => {
-    // Mock the IP and location data
-    const mockIp = '127.0.0.1';
-    const mockLocation = { latitude: 123, longitude: 456, city: 'MockCity' };
-    jest.spyOn(locationService, 'getIp').mockResolvedValue(mockIp);
+    jest.spyOn(locationService, 'getIp').mockResolvedValue(mockIP);
     jest.spyOn(locationService, 'getLocation').mockResolvedValue(mockLocation);
 
-    // Make a request to the endpoint
     const res = await request(app.getHttpServer())
       .get('/v1/location')
       .expect(200);
 
-    // Assert the response matches the expected location data
     expect(res.body).toEqual(mockLocation);
   });
 
