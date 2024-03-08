@@ -26,6 +26,8 @@
 
 [Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
 
+Node Version: 20.9.0
+
 ## Installation
 
 ```bash
@@ -39,11 +41,8 @@ $ npm install
 $ npm run start
 
 # watch mode
-$ npm run start:dev
+$ Open 'http://localhost:3000/api-docs'
 
-# production mode
-$ npm run start:prod
-```
 
 ## Test
 
